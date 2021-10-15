@@ -7,13 +7,17 @@ ProdutorRuralEntity _$ProdutorEntityFromJson(Map<String, dynamic> json) {
     cpf: json['cpf'] as String,
     telefone: json['telefone'] as String,
     celular: json['celular'] as String,
-    dose: json['dose'] as int,
+    dose: json['dose'] == null
+        ? null
+        : DoseEntity.fromJsonMap(json['dose'] as Map<String, dynamic>),
     tipoVacina: json['tipoVacina'] == null
         ? null
         : TipoVacinaEntity.fromJsonMap(
             json['tipoVacina'] as Map<String, dynamic>),
     dataVacinacao: json['dataVacinacao'] as String,
-    lote: json['lote'] as String,
+    lote: json['lote'] == null
+        ? null
+        : LoteEntity.fromJsonMap(json['lote'] as Map<String, dynamic>),
     categoria: json['categoria'] == null
         ? null
         : CategoriaPacienteEntity.fromJsonMap(
@@ -31,10 +35,10 @@ Map<String, dynamic> _$ProdutorEntityToJson(ProdutorRuralEntity instance) =>
       'cpf': instance.cpf,
       'telefone': instance.telefone,
       'celular': instance.celular,
-      'dose': instance.dose,
+      'dose': instance.dose?.toJsonMap(),
       'tipoVacina': instance.tipoVacina?.toJsonMap(),
       'dataVacinacao': instance.dataVacinacao,
-      'lote': instance.lote,
+      'lote': instance.lote?.toJsonMap(),
       'categoria': instance.categoria?.toJsonMap(),
       'grupo': instance.grupo?.toJsonMap(),
     };

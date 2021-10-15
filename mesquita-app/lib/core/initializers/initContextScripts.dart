@@ -5,10 +5,14 @@ import 'package:sagae/core/data/synchronizer/constants/datasource_constants.dart
 import 'package:sagae/core/locators/service.locator.dart';
 import 'package:sagae/core/util/dg_logger.service.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/categoria_sembast.datasource.dart';
+import 'package:sagae/features/cadastro_produtor/data/datasource/dose_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/grupo_sembast.datasource.dart';
+import 'package:sagae/features/cadastro_produtor/data/datasource/lote_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/tipo_vacina_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/categoria.entity.dart';
+import 'package:sagae/features/cadastro_produtor/data/model/dose.entity.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/grupo.entity.dart';
+import 'package:sagae/features/cadastro_produtor/data/model/lote.entity.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/tipo_vacina.entity.dart';
 import 'package:sagae/features/login/data/datasource/municipio_sembast.datasource.dart';
 import 'package:sagae/features/login/data/datasource/unidade_sembast.datasource.dart';
@@ -66,6 +70,8 @@ Future initCargaBot() async {
   await insertUnidades();
   await insertTipoVacina();
   await insertCategoria();
+  await insertDose();
+  await insertLotes();
   await insertGrupos();
 }
 
@@ -75,11 +81,169 @@ Future insertTipoVacina() async {
     return;
   }
   List<TipoVacinaEntity> tiposVacinaList = [
-    "Covid-19-AstraZeneca",
-    "Covid-19-Coronavac-Sinovac/Butantan",
-    "Covid-19-Covishield-Oxford/Fiocruz"
+    "Coronavac-Sinovac/Butantan",
+    "Covishield-Oxford/Fiocruz",
+    "Pfizer (Comirnaty)",
+    "Janssen (Recombinante)"
   ].map((e) => TipoVacinaEntity(nome: e)).toList();
   await sl<TipoVacinaSembastDatasource>().insertMany(tiposVacinaList);
+}
+
+Future insertLotes() async {
+  var datasource = await sl<LoteSembastDatasource>().fetchAll();
+  if (datasource != null && datasource.isNotEmpty) {
+    return;
+  }
+  List<LoteEntity> listaCompleta = [];
+  List<LoteEntity> sinovac = [
+    "210014",
+    "210017",
+    "200280",
+    "210040",
+    "210049",
+    "210054",
+    "210070",
+    "210097",
+    "210128",
+    "210129",
+    "210139",
+    "210145",
+    "210149",
+    "210150",
+    "210216",
+    "210219",
+    "210222",
+    "210273",
+    "210275",
+    "210324",
+    "210339",
+    "210351",
+    "210363",
+    "210367",
+    "210377",
+    "210348",
+    "210397",
+    "210389",
+    "210411",
+    "202009013",
+    "202009015",
+    "202106107",
+    "210444",
+    "210222",
+    "210458",
+    "210468"
+  ]
+      .map((e) =>
+          LoteEntity(numero: e, laboratorio: 'Coronavac-Sinovac/Butantan'))
+      .toList();
+  listaCompleta.addAll(sinovac);
+  List<LoteEntity> covishield = [
+    "4120Z005",
+    "CTMAV506",
+    "4120Z026",
+    "ABX0529",
+    "213VCD004ZVA",
+    "213VCD005ZVA",
+    "213VCD016W",
+    "213VCD017W",
+    "213VCD025W",
+    "214VCD043W",
+    "214VCD050W",
+    "214VCD066W",
+    "214VCD083W",
+    "214VCD078W",
+    "214VCD096Z",
+    "214VCD094W",
+    "214VCD104Z",
+    "215VCD118Z",
+    "215VCD117W",
+    "210183",
+    "215VCD149W",
+    "215VCD155W",
+    "215VCD012VA",
+    "210197",
+    "216VCD084W",
+    "216VCD184W",
+    "216VCD193Z",
+    "216VCD195Z",
+    "216VCD210W",
+    "217VCD223Z",
+    "216VCD216Z",
+    "216VCD217W",
+    "217VCD226Z",
+    "217VCD232Z",
+    "210185",
+    "217VCD230Z",
+    "217VCD233W",
+    "217VCD235Z",
+    "217VCD239Z",
+    "217VCD240W",
+    "218VCD250W",
+    "218VCD247Z",
+    "218VCD252W",
+    "218VCD257Z",
+    "218VCD253Z",
+    "218VCD259Z",
+    "218VCD264W",
+    "218VCD254W",
+    "219VCD268W",
+    "219VCD276W"
+  ]
+      .map((e) =>
+          LoteEntity(numero: e, laboratorio: 'Covishield-Oxford/Fiocruz'))
+      .toList();
+  listaCompleta.addAll(covishield);
+  List<LoteEntity> jansen = ["210A21A", "1821288"]
+      .map((e) => LoteEntity(numero: e, laboratorio: 'Janssen (Recombinante)'))
+      .toList();
+  listaCompleta.addAll(jansen);
+  List<LoteEntity> pfizer = [
+    "EW0199",
+    "FA7478",
+    "EY0574",
+    "EY0575",
+    "EY0586",
+    "FA9095",
+    "FA9094",
+    "FA9090",
+    "FA9096",
+    "FD7221",
+    "FD7208",
+    "FD7209",
+    "FE3591",
+    "FD7210",
+    "FD7222",
+    "28231BD",
+    "28235BD",
+    "FF5107",
+    "FF5110",
+    "FF8840",
+    "FF8842",
+    "FF8844",
+    "31025BD",
+    "31045BD",
+    "FF8848",
+    "FG3524",
+    "FG3530",
+    "FG3533",
+    "32010BD",
+    "FG3535",
+    "32016BD"
+  ]
+      .map((e) => LoteEntity(numero: e, laboratorio: 'Pfizer (Comirnaty)'))
+      .toList();
+  listaCompleta.addAll(pfizer);
+  await sl<LoteSembastDatasource>().insertMany(listaCompleta);
+}
+
+Future insertDose() async {
+  var datasource = await sl<DoseSembastDatasource>().fetchAll();
+  if (datasource != null && datasource.isNotEmpty) {
+    return;
+  }
+  List<DoseEntity> doseList =
+      ["D1", "D2", "DEF"].map((e) => DoseEntity(nome: e)).toList();
+  await sl<DoseSembastDatasource>().insertMany(doseList);
 }
 
 Future insertCategoria() async {

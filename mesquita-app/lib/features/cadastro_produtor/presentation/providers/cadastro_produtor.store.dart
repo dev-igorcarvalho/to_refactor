@@ -1,11 +1,15 @@
 import 'package:mobx/mobx.dart';
 import 'package:sagae/core/locators/service.locator.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/categoria_sembast.datasource.dart';
+import 'package:sagae/features/cadastro_produtor/data/datasource/dose_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/grupo_sembast.datasource.dart';
+import 'package:sagae/features/cadastro_produtor/data/datasource/lote_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/produtor_rural_http.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/tipo_vacina_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/categoria.entity.dart';
+import 'package:sagae/features/cadastro_produtor/data/model/dose.entity.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/grupo.entity.dart';
+import 'package:sagae/features/cadastro_produtor/data/model/lote.entity.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/tipo_vacina.entity.dart';
 
 part 'cadastro_produtor.store.g.dart';
@@ -40,6 +44,11 @@ abstract class _CadastroProdutorStore with Store {
 
   @observable
   ObservableList<GrupoEntity> grupos;
+  @observable
+  ObservableList<DoseEntity> dose;
+
+  @observable
+  ObservableList<LoteEntity> lotes;
 
   @observable
   ObservableList<CategoriaPacienteEntity> categorias;
@@ -49,6 +58,8 @@ abstract class _CadastroProdutorStore with Store {
   Future loadDropDownLists() async {
     _isLoading = true;
     await _loadCategorias();
+    await _loadTipoVacina();
+    await _loadDose();
     await _loadTipoVacina();
     _isLoading = false;
   }
@@ -64,6 +75,33 @@ abstract class _CadastroProdutorStore with Store {
         .fetchAll(sortParams: ['nome'], filterParams: filter);
     grupos = ObservableList.of(result);
     _isLoading = false;
+  }
+
+  @action
+  Future loadLoteByLaboratorio({String nome}) async {
+    _isLoading = true;
+    final Map<String, dynamic> filter = {
+      'laboratorio': nome,
+    };
+    final List<LoteEntity> result = await sl<LoteSembastDatasource>()
+        .fetchAll(sortParams: ['laboratorio'], filterParams: filter);
+    lotes = ObservableList.of(result);
+    _isLoading = false;
+  }
+
+  //UST: 14/09 - CadastroProdutorStore - id:11 - 2pts - Criação
+  @action
+  Future _loadDose() async {
+    final List<DoseEntity> result =
+        await sl<DoseSembastDatasource>().fetchAll(sortParams: ['nome']);
+    dose = ObservableList.of(result);
+  }
+
+  @action
+  Future _loadLote() async {
+    final List<LoteEntity> result =
+        await sl<LoteSembastDatasource>().fetchAll(sortParams: ['numero']);
+    lotes = ObservableList.of(result);
   }
 
   //UST: 14/09 - CadastroProdutorStore - id:11 - 2pts - Criação

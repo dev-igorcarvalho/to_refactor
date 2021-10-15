@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:sagae/core/generics/generic.entity.dart';
+import 'package:sagae/features/cadastro_produtor/data/model/dose.entity.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/grupo.entity.dart';
+import 'package:sagae/features/cadastro_produtor/data/model/lote.entity.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/tipo_vacina.entity.dart';
 
 import 'categoria.entity.dart';
@@ -19,8 +21,8 @@ class ProdutorRuralEntity implements GenericEntity {
   String celular;
   TipoVacinaEntity tipoVacina;
   String dataVacinacao;
-  String lote;
-  int dose;
+  LoteEntity lote;
+  DoseEntity dose;
   CategoriaPacienteEntity categoria;
   GrupoEntity grupo;
 

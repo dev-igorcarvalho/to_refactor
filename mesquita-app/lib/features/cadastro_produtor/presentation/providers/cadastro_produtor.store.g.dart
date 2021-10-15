@@ -62,6 +62,36 @@ mixin _$CadastroProdutorStore on _CadastroProdutorStore, Store {
     });
   }
 
+  final _$doseAtom = Atom(name: '_CadastroProdutorStore.dose');
+
+  @override
+  ObservableList<DoseEntity> get dose {
+    _$doseAtom.reportRead();
+    return super.dose;
+  }
+
+  @override
+  set dose(ObservableList<DoseEntity> value) {
+    _$doseAtom.reportWrite(value, super.dose, () {
+      super.dose = value;
+    });
+  }
+
+  final _$lotesAtom = Atom(name: '_CadastroProdutorStore.lotes');
+
+  @override
+  ObservableList<LoteEntity> get lotes {
+    _$lotesAtom.reportRead();
+    return super.lotes;
+  }
+
+  @override
+  set lotes(ObservableList<LoteEntity> value) {
+    _$lotesAtom.reportWrite(value, super.lotes, () {
+      super.lotes = value;
+    });
+  }
+
   final _$categoriasAtom = Atom(name: '_CadastroProdutorStore.categorias');
 
   @override
@@ -94,6 +124,31 @@ mixin _$CadastroProdutorStore on _CadastroProdutorStore, Store {
         .run(() => super.loadGrupoByCategoria(nome: nome));
   }
 
+  final _$loadLoteByLaboratorioAsyncAction =
+      AsyncAction('_CadastroProdutorStore.loadLoteByLaboratorio');
+
+  @override
+  Future<dynamic> loadLoteByLaboratorio({String nome}) {
+    return _$loadLoteByLaboratorioAsyncAction
+        .run(() => super.loadLoteByLaboratorio(nome: nome));
+  }
+
+  final _$_loadDoseAsyncAction =
+      AsyncAction('_CadastroProdutorStore._loadDose');
+
+  @override
+  Future<dynamic> _loadDose() {
+    return _$_loadDoseAsyncAction.run(() => super._loadDose());
+  }
+
+  final _$_loadLoteAsyncAction =
+      AsyncAction('_CadastroProdutorStore._loadLote');
+
+  @override
+  Future<dynamic> _loadLote() {
+    return _$_loadLoteAsyncAction.run(() => super._loadLote());
+  }
+
   final _$_loadTipoVacinaAsyncAction =
       AsyncAction('_CadastroProdutorStore._loadTipoVacina');
 
@@ -115,6 +170,8 @@ mixin _$CadastroProdutorStore on _CadastroProdutorStore, Store {
     return '''
 vacinas: ${vacinas},
 grupos: ${grupos},
+dose: ${dose},
+lotes: ${lotes},
 categorias: ${categorias},
 isLoading: ${isLoading}
     ''';

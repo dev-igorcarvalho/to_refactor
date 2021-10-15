@@ -13,7 +13,9 @@ import 'package:sagae/core/util/dg_logger.service.dart';
 import 'package:sagae/core/widgets/store/loading.store.dart';
 import 'package:sagae/core/widgets/store/sync.store.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/categoria_sembast.datasource.dart';
+import 'package:sagae/features/cadastro_produtor/data/datasource/dose_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/grupo_sembast.datasource.dart';
+import 'package:sagae/features/cadastro_produtor/data/datasource/lote_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/produtor_rural_http.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/produtor_rural_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/tipo_vacina_sembast.datasource.dart';
@@ -83,6 +85,8 @@ void _initProdutorRuralModule() {
   sl.registerFactory(() => CargaInicialHttpDatasource());
   sl.registerFactory(() => ProdutorRuralSembastDatasource());
   sl.registerFactory(() => TipoVacinaSembastDatasource());
+  sl.registerFactory(() => DoseSembastDatasource());
+  sl.registerFactory(() => LoteSembastDatasource());
   sl.registerFactory(() => GrupoSembastDatasource());
   sl.registerFactory(() => CategoriaSembastDatasource());
   sl.registerFactory(() => ProdutorRepository());

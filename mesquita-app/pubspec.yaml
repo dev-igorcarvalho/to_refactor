@@ -47,12 +47,15 @@ dependencies:
   geolocator: ^6.0.0
   #impede a tela de ser desligada por inatividade
   wakelock: ^0.1.4+2
-  flutter_datetime_picker: ^1.4.0
+  flutter_datetime_picker: 1.5.0
   basic_utils: ^1.5.0
   image_picker: ^0.6.7+22
   wifi_info_flutter: 1.0.3
   imei_plugin: ^1.2.0
 
+#
+#dependency_overrides:
+#  analyzer: 0.39.14
 
 dev_dependencies:
   flutter_test:

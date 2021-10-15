@@ -6,12 +6,13 @@ import 'package:sagae/core/locators/service.locator.dart';
 import 'package:sagae/core/util/cpf_mask.dart';
 import 'package:sagae/core/util/date_mask.dart';
 import 'package:sagae/core/util/dg_input.validator.dart';
-import 'package:sagae/core/util/numberParsers.dart';
 import 'package:sagae/core/util/sagae_cpf.validator.dart';
 import 'package:sagae/core/widgets/dg_widgets/dg_select_menu.dart';
 import 'package:sagae/core/widgets/dg_widgets/dg_separator.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/categoria.entity.dart';
+import 'package:sagae/features/cadastro_produtor/data/model/dose.entity.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/grupo.entity.dart';
+import 'package:sagae/features/cadastro_produtor/data/model/lote.entity.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/tipo_vacina.entity.dart';
 import 'package:sagae/features/cadastro_produtor/presentation/providers/cadastro_produtor.store.dart';
 import 'package:sagae/features/cadastro_produtor/service/produtor.service.dart';
@@ -28,17 +29,6 @@ class _CadastroProdutorFormState extends State<CadastroProdutorForm>
     sl<CadastroProdutorStore>().loadDropDownLists();
     loteCache = loteChaceGambi;
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    print(loteChaceGambi);
-    setState(() {
-      produtorRural.lote = loteCache;
-    });
-    print(loteCache);
-    super.didChangeDependencies();
   }
 
   @override
@@ -135,8 +125,11 @@ class _CadastroProdutorFormState extends State<CadastroProdutorForm>
                 builder: (_) => DgSelectMenu(
                   onChanged: (TipoVacinaEntity val) {
                     setState(() {
+                      produtorRural.lote = null;
                       produtorRural.tipoVacina = val;
                     });
+                    sl<CadastroProdutorStore>().loadLoteByLaboratorio(
+                        nome: produtorRural.tipoVacina.nome);
                   },
                   //UST: 10/08 - CadastroProdutorForm - id:2 - 0,5pts - CriaÃ§Ã£o
                   validator: (val) =>
@@ -147,44 +140,37 @@ class _CadastroProdutorFormState extends State<CadastroProdutorForm>
                   dataSource: sl<CadastroProdutorStore>().vacinas,
                 ),
               ),
-              TextFormField(
-                // CPF; TIPO DE VACINA; DOSE; LOTE;  CATEGORIA; GRUPO.
-                decoration: const InputDecoration(
-                  labelText: 'Dose',
+              Observer(
+                builder: (_) => DgSelectMenu(
+                  onChanged: (LoteEntity val) {
+                    setState(() {
+                      produtorRural.lote = val;
+                    });
+                  },
+                  //UST: 10/08 - CadastroProdutorForm - id:2 - 0,5pts - CriaÃ§Ã£o
+                  validator: (val) =>
+                      DgInputValidator.validarInput(val, nome: 'Lote'),
+                  required: true,
+                  titleText: 'Lote',
+                  value: produtorRural.lote,
+                  dataSource: sl<CadastroProdutorStore>().lotes,
                 ),
-                maxLength: 1,
-                //UST: 14/09 - CadastroProdutorForm - id:2 - 0,5pts - Criação - removido por solicitacao do cliente
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context)
-                      .focusInDirection(TraversalDirection.down);
-                },
-                validator: (val) =>
-                    DgInputValidator.validarInput(val, nome: 'Dose'),
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
-                onSaved: (String val) {
-                  produtorRural.dose = parseInt(val);
-                },
               ),
-              TextFormField(
-                // CPF; TIPO DE VACINA; DOSE; LOTE;  CATEGORIA; GRUPO.
-                decoration: const InputDecoration(
-                  labelText: 'Lote',
+              Observer(
+                builder: (_) => DgSelectMenu(
+                  onChanged: (DoseEntity val) {
+                    setState(() {
+                      produtorRural.dose = val;
+                    });
+                  },
+                  //UST: 10/08 - CadastroProdutorForm - id:2 - 0,5pts - CriaÃ§Ã£o
+                  validator: (val) =>
+                      DgInputValidator.validarInput(val, nome: 'Dose'),
+                  required: true,
+                  titleText: 'Dose',
+                  value: produtorRural.dose,
+                  dataSource: sl<CadastroProdutorStore>().dose,
                 ),
-                //UST: 14/09 - CadastroProdutorForm - id:2 - 0,5pts - Criação - removido por solicitacao do cliente
-                validator: (val) =>
-                    DgInputValidator.validarInput(val, nome: 'Lote'),
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context)
-                      .focusInDirection(TraversalDirection.down);
-                },
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.text,
-                initialValue: loteCache,
-                onSaved: (String val) {
-                  loteChaceGambi = val;
-                  produtorRural.lote = val;
-                },
               ),
               Observer(
                 builder: (_) => DgSelectMenu(

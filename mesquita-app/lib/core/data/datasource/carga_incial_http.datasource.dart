@@ -6,10 +6,14 @@ import 'package:sagae/core/generics/genericHttp.datasource.dart';
 import 'package:sagae/core/locators/routes.locator.dart';
 import 'package:sagae/core/locators/service.locator.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/categoria_sembast.datasource.dart';
+import 'package:sagae/features/cadastro_produtor/data/datasource/dose_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/grupo_sembast.datasource.dart';
+import 'package:sagae/features/cadastro_produtor/data/datasource/lote_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/datasource/tipo_vacina_sembast.datasource.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/categoria.entity.dart';
+import 'package:sagae/features/cadastro_produtor/data/model/dose.entity.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/grupo.entity.dart';
+import 'package:sagae/features/cadastro_produtor/data/model/lote.entity.dart';
 import 'package:sagae/features/cadastro_produtor/data/model/tipo_vacina.entity.dart';
 import 'package:sagae/features/login/data/datasource/municipio_sembast.datasource.dart';
 import 'package:sagae/features/login/data/datasource/unidade_sembast.datasource.dart';
@@ -52,6 +56,16 @@ class CargaInicialHttpDatasource extends GenericHttpDatasource {
     await sl<TipoVacinaSembastDatasource>().deleteAll();
     await sl<TipoVacinaSembastDatasource>().insertMany(tipoVacina);
 
+    List<DoseEntity> dose = (result['dose']['dose'] as List)
+        .map((e) => DoseEntity(nome: e.toString()))
+        .toList();
+    await sl<DoseSembastDatasource>().deleteAll();
+    await sl<DoseSembastDatasource>().insertMany(dose);
+
+    List<LoteEntity> lotes = getLotes(result);
+    await sl<LoteSembastDatasource>().deleteAll();
+    await sl<LoteSembastDatasource>().insertMany(lotes);
+
     List<UnidadeEntity> unidades = getUnidades(result);
     await sl<UnidadeSembastDatasource>().deleteAll();
     await sl<UnidadeSembastDatasource>().insertMany(unidades);
@@ -79,6 +93,19 @@ class CargaInicialHttpDatasource extends GenericHttpDatasource {
       });
     });
     return grupoList;
+  }
+
+  List<LoteEntity> getLotes(Map<String, dynamic> result) {
+    Map<String, dynamic> lotes =
+        (result['lotes']['lotes'] as Map<String, dynamic>);
+    List<LoteEntity> loteList = [];
+    lotes.forEach((key, value) {
+      List list = value as List;
+      list.forEach((element) {
+        loteList.add(LoteEntity(numero: element.toString(), laboratorio: key));
+      });
+    });
+    return loteList;
   }
 
   List<UnidadeEntity> getUnidades(Map<String, dynamic> result) {
